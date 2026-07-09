@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Tools;
+namespace GomdimApps\Tools;
 
 use Illuminate\Support\Facades\Cache;
 
@@ -21,11 +21,11 @@ class Ip
             ];
         }
 
-        return Cache::remember("ip_details:{$ip}", 86400, function () use ($ip) {
+        return Cache::remember("ip_details:{$ip}", config('tools.ip.cache_ttl', 86400), function () use ($ip) {
             $fields = 'status,message,continent,continentCode,country,countryCode,region,regionName,city,district,zip,lat,lon,timezone,offset,currency,isp,org,as,asname,mobile,proxy,hosting,query';
 
-            // 1. Tenta API Principal
-            $api = APICall::make("http://ip-api.com/json/{$ip}")
+            // 1. Try the primary API
+            $api = RequestCall::make("http://ip-api.com/json/{$ip}")
                 ->timeout(3)
                 ->withQuery(['fields' => $fields])
                 ->execute();
@@ -34,8 +34,8 @@ class Ip
                 return $api->json();
             }
 
-            // 2. Tenta Fallback
-            $fallback = APICall::make("https://ipapi.co/{$ip}/json/")
+            // 2. Try the fallback
+            $fallback = RequestCall::make("https://ipapi.co/{$ip}/json/")
                 ->timeout(3)
                 ->execute();
 
@@ -63,7 +63,7 @@ class Ip
                 ];
             }
 
-            // 3. Falha Total
+            // 3. Total failure
             return [
                 'status' => 'fail',
                 'message' => 'fetch_error',
