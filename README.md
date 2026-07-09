@@ -9,7 +9,7 @@ A wrapper of utility tools for Laravel applications, built on top of Laravel's o
 ## Requirements
 
 - PHP 8.3, 8.4 or 8.5
-- Laravel 10, 11, 12 or 13
+- Laravel 12 or 13 (Laravel 10 and 11 are past their security-support window and are no longer supported; Laravel 13 support is best-effort until `pestphp/pest-plugin-laravel` adds support for it)
 
 ## Installation
 
