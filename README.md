@@ -88,6 +88,26 @@ use GomdimApps\Tools\RequestCall;
 $details = RequestCall::getIp();
 ```
 
+## `Pix`
+
+Builds a Pix "Copia e Cola" payload (EMV BR Code), including the CRC-16 checksum required by the spec.
+
+```php
+use GomdimApps\Tools\Pix;
+
+$payload = Pix::make(
+    keyType: 'document',
+    pixKey: '11222333000181',
+    merchantName: 'Empresa Teste Ltda',
+    merchantCity: 'Sao Paulo',
+)
+    ->amount(150.00)
+    ->txId('PEDIDO123')
+    ->build();
+```
+
+Supported `keyType` values: `document` (CPF/CNPJ, digits are stripped), `phone` (normalized to `+55` E.164), `email` and `random`. `amount()`, `txId()` and `description()` are optional — when `txId()` is omitted, the payload defaults to `***`, and when `amount()` is omitted, the amount field is left out entirely.
+
 ## Configuration
 
 `config/tools.php`:
